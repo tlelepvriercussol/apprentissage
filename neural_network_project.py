@@ -1,21 +1,22 @@
 import numpy as np
 import math
 import random
+#from data_parser import *
 
 #---------------------- Data Class ----------------------#
 class mammo:
     
 
     def __init__(self):
-        self.BI-RADS = 0
+        self.bi_rads = 0
         self.age=0
         self.shape=0
         self.margin=0
         self.density=0
         self.severity=0
 
-    def set_characteristics(self, BI-RADS, age, shape, margin, density, severity):
-        self.BI-RADS=BI-RADS
+    def set_characteristics(self, bi_rads, age, shape, margin, density, severity):
+        self.bi_rads=bi_rads
         self.age=age
         self.shape=shape
         self.margin=margin
@@ -23,7 +24,7 @@ class mammo:
         self.severity=severity
 
     def get_response(self):
-        return severity
+        return self.severity
 
 
 #---------------------- Neuralis Class ----------------------#
@@ -38,7 +39,7 @@ class neuron:
         self.output=0.0
 
     def init_weights(self):
-        for i in range(len(weights)):
+        for i in range(len(self.weights)):
             self.weights[i]=random.uniform(-10.0,10.0)
         self.threshold=1.0
 
@@ -53,14 +54,14 @@ class neuron:
             self.output=1.0
         else:
             self.output=0.0
-            #print(self.weights)
         
                   
-    def calculate_output(self, attr1, attr2, attr3, attr4):
+    def calculate_output(self, attr1, attr2, attr3, attr4, attr5):
         self.entries[1]=attr1
         self.entries[2]=attr2
         self.entries[3]=attr3
         self.entries[4]=attr4
+        self.entries[5]=attr5
         
         self.calculate()
 
@@ -71,13 +72,11 @@ def perceptron(listmammos, neuronLambda):
     ite=0
     output=0.0
 
-    while (nb_errors > 0 and ite < 100000):
+    while (nb_errors > 0 and ite < 1000):
         nb_errors = 0
-        
-#        print neuronLambda.weights
 
         for mammo in listmammos:
-            neuronLambda.calculate_output(mammo.size, mammo.weight)
+            neuronLambda.calculate_output(mammo.bi_rads, mammo.age, mammo.shape, mammo.margin, mammo.density)
             output = neuronLambda.output
             true_answer = mammo.get_response()
 
@@ -96,25 +95,79 @@ def perceptron(listmammos, neuronLambda):
     print(ite)
 #---------------------- Learning Data ----------------------#
 
-listmammos = [ mammo() for i in range(12)]
+def parse_data(data_file_name):
+    """inputfile = open(data_file_name)
+    num_lines = sum(1 for line in inputfile)
+    inputfile.close()"""
+
+    inputfile = open(data_file_name)
+    #listmammo = [ mammo() for i in range(num_lines)]
+
+    listmammo = []
+
+    for line in inputfile:
+        #print line
+        temp_mammo = mammo()
+        strings = line.split(",")
+
+        temp_mammo.set_characteristics(strings[0], strings[1], strings[2], strings[3], strings[4], strings[5])
+
+        if check_missing_arg(temp_mammo):
+            listmammo.append(temp_mammo)
+
+
+    print len(listmammo)
+
+    inputfile.close()
+    return listmammo
+    
+def check_missing_arg(mammo):
+    result = True
+    if(mammo.bi_rads == "?"):
+        mammo.bi_rads = -1
+        result = False
+    else:
+        mammo.bi_rads = int(mammo.bi_rads)
+
+    if(mammo.age == "?"):
+        mammo.age = -1
+        result = False
+    else:
+        mammo.age = int(mammo.age)
+
+    if(mammo.shape == "?"):
+        mammo.shape = -1
+        result = False
+    else:
+        mammo.shape = int(mammo.shape)
+
+    if(mammo.margin == "?"):
+        mammo.margin = -1
+        result = False
+    else:
+        mammo.margin = int(mammo.margin)
+
+    if(mammo.density == "?"):
+        mammo.density = -1
+        result = False
+    else:
+        mammo.density = int(mammo.density)
+
+    if(mammo.severity == "?"):
+        mammo.severity = "NONSENSEGETOUTOFMYLAWN"
+        result = False
+    else:
+        mammo.severity = int(mammo.severity)
+
+    return result
 
 #Initalizing listmammos with real data:
 
-listmammos[0].set_characteristics("A", 36, 17)
-listmammos[1].set_characteristics("A", 41, 16)
-listmammos[2].set_characteristics("A", 48, 18)
-listmammos[3].set_characteristics("A", 47, 18)
-listmammos[4].set_characteristics("A", 50, 22)
-listmammos[5].set_characteristics("A", 48, 21)
-listmammos[6].set_characteristics("B", 48, 12)
-listmammos[7].set_characteristics("B", 56, 16)
-listmammos[8].set_characteristics("B", 62, 13)
-listmammos[9].set_characteristics("B", 60, 24)
-listmammos[10].set_characteristics("B", 65, 18)
-listmammos[11].set_characteristics("B", 66, 21)
+listmammos = parse_data("mammographic_masses.data")
 
 
-#print(listmammos[5].weight)
+print ("-" * 100)
+#print listmammos[0].age
 
 #---------------------- Creating Neurons ----------------------#
 

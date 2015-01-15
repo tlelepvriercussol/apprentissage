@@ -55,3 +55,69 @@ def check_missing_arg(mammo):
 
 
                                                 
+
+def parse_data(data_file_name):
+    """inputfile = open(data_file_name)
+    num_lines = sum(1 for line in inputfile)
+    inputfile.close()"""
+
+    inputfile = open(data_file_name)
+    #listmammo = [ mammo() for i in range(num_lines)]
+
+    listmammo = []
+
+    for line in inputfile:
+        #print line
+        temp_mammo = mammo()
+        strings = line.split(",")
+
+        temp_mammo.set_characteristics(strings[0], strings[1], strings[2], strings[3], strings[4], strings[5])
+
+        if check_missing_arg(temp_mammo):
+            listmammo.append(temp_mammo)
+
+
+    print len(listmammo)
+
+    inputfile.close()
+    return listmammo
+    
+def check_missing_arg(mammo):
+    result = True
+    if(mammo.bi_rads == "?"):
+        mammo.bi_rads = -1
+        result = False
+    else:
+        mammo.bi_rads = int(mammo.bi_rads)
+
+    if(mammo.age == "?"):
+        mammo.age = -1
+        result = False
+    else:
+        mammo.age = int(mammo.age)
+
+    if(mammo.shape == "?"):
+        mammo.shape = -1
+        result = False
+    else:
+        mammo.shape = int(mammo.shape)
+
+    if(mammo.margin == "?"):
+        mammo.margin = -1
+        result = False
+    else:
+        mammo.margin = int(mammo.margin)
+
+    if(mammo.density == "?"):
+        mammo.density = -1
+        result = False
+    else:
+        mammo.density = int(mammo.density)
+
+    if(mammo.severity == "?"):
+        mammo.severity = "NONSENSEGETOUTOFMYLAWN"
+        result = False
+    else:
+        mammo.severity = int(mammo.severity)
+
+    return result
