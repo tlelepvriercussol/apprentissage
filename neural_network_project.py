@@ -6,7 +6,6 @@ import random
 #---------------------- Data Class ----------------------#
 class mammo:
     
-
     def __init__(self):
         self.bi_rads = 0
         self.age=0
@@ -96,17 +95,11 @@ def perceptron(listmammos, neuronLambda):
 #---------------------- Learning Data ----------------------#
 
 def parse_data(data_file_name):
-    """inputfile = open(data_file_name)
-    num_lines = sum(1 for line in inputfile)
-    inputfile.close()"""
-
     inputfile = open(data_file_name)
-    #listmammo = [ mammo() for i in range(num_lines)]
 
     listmammo = []
 
     for line in inputfile:
-        #print line
         temp_mammo = mammo()
         strings = line.split(",")
 
@@ -167,7 +160,6 @@ listmammos = parse_data("mammographic_masses.data")
 
 
 print ("-" * 100)
-#print listmammos[0].age
 
 #---------------------- Creating Neurons ----------------------#
 
