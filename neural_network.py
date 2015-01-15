@@ -25,7 +25,7 @@ class rodent:
 #---------------------- Neuralis Class ----------------------#
 class neuron:
 
-    learning_rate = 0.2
+    learning_rate = 1
     
     def __init__(self):
         self.entries=[1.0,0.0,0.0]
@@ -46,10 +46,11 @@ class neuron:
         for i in range(length):
             not_even_my_final_form += self.entries[i]*self.weights[i]
 
-        if(not_even_my_final_form >= self.threshold):
+        if(not_even_my_final_form > self.threshold):
             self.output=1.0
-            print "C'est la roulade"
-            print(self.weights)
+        else:
+            self.output=0.0
+            #print(self.weights)
         
                   
     def calculate_output(self, attr1, attr2):
@@ -65,16 +66,23 @@ def perceptron(listrodents, neuronLambda):
     ite=0
     output=0.0
 
-    while (nb_errors > 0 and ite <100000):
+    while (nb_errors > 0 and ite < 100000):
         nb_errors = 0
+        
+#        print neuronLambda.weights
 
         for rodent in listrodents:
-            neuronLambda.calculate_output(listrodents[i].size, listrodents[i].weight)
+            neuronLambda.calculate_output(rodent.size, rodent.weight)
             output = neuronLambda.output
             true_answer = rodent.get_response()
 
+
             for j in range(len(neuronLambda.weights)):
                 neuronLambda.weights[j] += neuron.learning_rate*(true_answer - output)*neuronLambda.entries[j]
+                """            if true_answer - output != 0:
+                print rodent.size, rodent.weight
+                print neuron.learning_rate*(true_answer - output)*neuronLambda.entries[j]
+                print neuronLambda.weights"""
             nb_errors += math.fabs(true_answer - output)
             
         ite += 1
